@@ -1,0 +1,160 @@
+ 
+CREATE TABLE MovieStar (
+	name varchar(255) NOT NULL,
+	address varchar (255), 
+	gender boolean,
+	birthdate date,
+    CONSTRAINT PK_MovieStar PRIMARY KEY (name)
+); 
+
+CREATE TABLE MovieExec (
+	certificate_number varchar(255) NOT NULL, 
+	name varchar(255), 
+	address varchar(255), 
+	netWorth int,
+    CONSTRAINT PK_MovieExec PRIMARY KEY (certificate_number)
+); 
+
+CREATE TABLE Studio (
+	name varchar(255) NOT NULL, 
+	address varchar(255), 
+	president_certificate_number varchar(255) NOT NULL,
+	CONSTRAINT FK_MovieExec_certificate_number 
+	FOREIGN KEY (president_certificate_number) REFERENCES MovieExec(certificate_number)
+); 
+
+INSERT INTO MovieStar VALUES ('elthon ', 'zona1', TRUE, '1989-04-01'); 
+INSERT INTO MovieStar VALUES ('ramiro', 'zona2', TRUE, '1915-02-02'); 
+INSERT INTO MovieStar VALUES ('clara', 'zona3', FALSE, '1967-09-03'); 
+INSERT INTO MovieStar VALUES ('emma', 'zona4', FALSE, '1996-07-07'); 
+
+INSERT INTO MovieExec VALUES ('Certificate1', 'MovieExec1', 'zona16',45); 
+INSERT INTO MovieExec VALUES ('Certificate2', 'MovieExec2', 'elcaporal', 99); 
+INSERT INTO MovieExec VALUES ('Certificate3', 'MovieExec4', 'sanvicente', 22); 
+INSERT INTO MovieExec VALUES ('Certificate4', 'MovieExec3', 'granadinas', 74);
+
+INSERT INTO Studio VALUES ('warner','miami','Certificate1');
+INSERT INTO Studio VALUES ('lion','los angeles','Certificate1');
+INSERT INTO Studio VALUES ('disney','calfornia','Certificate2');
+INSERT INTO Studio VALUES ('marvel','la paz','Certificate3');
+
+/* Ejercicio 1*/ 
+/* Parte 1 */
+/* 1. */
+CREATE VIEW RichExec AS
+	SELECT *  
+	FROM MovieExec
+	WHERE netWorth > 9
+
+/* 2. */
+CREATE VIEW StudioPres AS
+	SELECT * 
+	FROM MovieExec
+	WHERE certificate_number IN 
+		(
+		SELECT president_certificate_number FROM Studio
+		)
+
+/* 3. */
+CREATE VIEW ExecutiveStar AS
+	SELECT * 
+	FROM MovieExec
+	WHERE 
+		certificate_number IN (SELECT president_certificate_number FROM Studio) AND 
+		name IN	(SELECT name FROM MovieStar)
+/*
+ La vista de StudioPress siver mas para actualizar. que la otra
+*/
+
+ 
+ 
+SELECT name
+FROM RichExec
+WHERE certificate_number IN
+	(
+		SELECT president_certificate_number 
+		FROM Studio
+	)
+/* 2. */
+SELECT name 
+FROM ExecutiveStar
+WHERE netWorth > 50
+
+ /* parte dos papu */ 
+ 
+ 
+/* GENERACION DE TABLAS  */
+CREATE TABLE Product (
+	maker varchar(255),
+	model varchar (255), 
+	type varchar (255)
+); 
+
+CREATE TABLE PC (
+	model varchar(255),
+	speed float, 
+	ram int,
+	hd int,
+    price float
+); 
+
+CREATE VIEW NewPC AS
+	SELECT maker, PC.model, speed, ram, hd, price
+	FROM Product, PC
+	WHERE Product.model = PC.model AND type='pc'
+
+/*  respueta No se puede actualizar por que una buena práctica es usar triggers para resolver la pregunta
+custionada papa */
+
+
+/* insercion sort */
+CREATE OR REPLACE FUNCTION insertview() RETURNS TRIGGER
+	SET SCHEMA 'public'
+	LANGUAGE plpgsql
+	AS
+	$$
+		BEGIN 
+			INSERT INTO Product VALUES ('pc' , new.speed , new.ram , new.hd , new.price)
+			INSERT INTO PC VALUES (new.makes , new.model , 'pc')
+			RETURN NEW
+		END
+	$$
+
+CREATE TRIGGER VIEW insert
+INSTEAD OF INSERT ON NewPC
+	FOR EACH ROW 
+	EXECUTE PROCEDURE insertVIEW();
+	
+/* update  */
+CREATE OR REPLACE FUNCTION updateVIEW() RETURNS TRIGGER
+	SET SCHEMA 'public'
+	LANGUAGE plpsql
+	AS
+	$$
+		BEGIN 
+			UPDATE PC
+			SET price = new.price
+			WHERE model = new.model; 
+			RETURN NEW
+		END
+	$$
+
+CREATE TRIGGER VIEWupdate
+INSTEAD OF UPDATE ON NewPC
+	FOR EACH ROW 
+	EXECUTE PROCEDURE updateVIEW();
+
+/* ELIMINACION */
+CREATE OR REPLACE FUNCTION deleteVIEW() RETURNS TRIGGER
+	SET SCHEMA 'public'
+	LANGUAGE plpsql
+	AS
+	$$
+		BEGIN 
+			DELETE FROM PC
+			WHERE model = new.model; 
+			RETURN NEW
+		END
+	$$
+
+ /* falta probar el de eliminación no es 90% funcional*/
