@@ -151,10 +151,7 @@ CREATE OR REPLACE FUNCTION deleteVIEW() RETURNS TRIGGER
 	AS
 	$$
 		BEGIN 
-			DELETE FROM PC
-			WHERE model = new.model; 
-			RETURN NEW
-		END
+		
 	$$
 
  /* falta probar el de eliminación no es 90% funcional*/
