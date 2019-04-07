@@ -2,7 +2,7 @@
 CREATE TABLE MovieStar (
 	name varchar(255) NOT NULL,
 	address varchar (255), 
-	gender boolean,
+	gender int,
 	birthdate date,
     CONSTRAINT PK_MovieStar PRIMARY KEY (name)
 ); 
@@ -23,10 +23,10 @@ CREATE TABLE Studio (
 	FOREIGN KEY (president_certificate_number) REFERENCES MovieExec(certificate_number)
 ); 
 
-INSERT INTO MovieStar VALUES ('elthon ', 'zona1', TRUE, '1989-04-01'); 
-INSERT INTO MovieStar VALUES ('ramiro', 'zona2', TRUE, '1915-02-02'); 
-INSERT INTO MovieStar VALUES ('clara', 'zona3', FALSE, '1967-09-03'); 
-INSERT INTO MovieStar VALUES ('emma', 'zona4', FALSE, '1996-07-07'); 
+INSERT INTO MovieStar VALUES ('elthon ', 'zona1', 1, '1989-04-01'); 
+INSERT INTO MovieStar VALUES ('ramiro', 'zona2', 1, '1915-02-02'); 
+INSERT INTO MovieStar VALUES ('clara', 'zona3', 2, '1967-09-03'); 
+INSERT INTO MovieStar VALUES ('emma', 'zona4', 2, '1996-07-07'); 
 
 INSERT INTO MovieExec VALUES ('Certificate1', 'MovieExec1', 'zona16',45); 
 INSERT INTO MovieExec VALUES ('Certificate2', 'MovieExec2', 'elcaporal', 99); 
