@@ -38,15 +38,15 @@ INSERT INTO Studio VALUES ('lion','los angeles','Certificate1');
 INSERT INTO Studio VALUES ('disney','calfornia','Certificate2');
 INSERT INTO Studio VALUES ('marvel','la paz','Certificate3');
 
-/* Ejercicio 1*/ 
+  
 /* Parte 1 */
-/* 1. */
+ 
 CREATE VIEW RichExec AS
 	SELECT *  
 	FROM MovieExec
 	WHERE netWorth > 9
 
-/* 2. */
+/*  parte 22. */
 CREATE VIEW StudioPres AS
 	SELECT * 
 	FROM MovieExec
@@ -55,7 +55,7 @@ CREATE VIEW StudioPres AS
 		SELECT president_certificate_number FROM Studio
 		)
 
-/* 3. */
+/* Con el manejador de PostgreSQL de uso habitual, construya las siguientes vistas: */
 CREATE VIEW ExecutiveStar AS
 	SELECT * 
 	FROM MovieExec
@@ -75,7 +75,7 @@ WHERE certificate_number IN
 		SELECT president_certificate_number 
 		FROM Studio
 	)
-/* 2. */
+ 
 SELECT name 
 FROM ExecutiveStar
 WHERE netWorth > 50
@@ -144,7 +144,7 @@ INSTEAD OF UPDATE ON NewPC
 	FOR EACH ROW 
 	EXECUTE PROCEDURE updateVIEW();
 
-/* ELIMINACION */
+/* virus eliminate  */
 CREATE OR REPLACE FUNCTION deleteVIEW() RETURNS TRIGGER
 	SET SCHEMA 'public'
 	LANGUAGE plpsql
